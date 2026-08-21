@@ -8,7 +8,9 @@ Businesses that process payments often have transaction data coming from multipl
 * Internal order or billing systems
 * Refund systems
 * Settlement reports
+
 These systems don't always represent transactions in exactly the same way or at the same time. A payment may appear as successful in one system but be missing from another, have a different reference ID, settle for a different amount, or be refunded later.
+
 This creates a reconciliation problem.
 A finance or operations employee may have to manually compare large numbers of transactions across systems to determine:
 * Which transactions match
@@ -20,6 +22,7 @@ A finance or operations employee may have to manually compare large numbers of t
 
 ### Proposed solution
 Build a **Financial Operations & Payment Reconciliation Platform** that ingests payment/transaction data from multiple sources, normalizes it, automatically matches related transactions, identifies discrepancies, and provides an operational dashboard for investigating and resolving them.
+  
 The portfolio project should simulate the kinds of systems a real financial-operations team might use without handling real customer financial data.
 
 ## 2. Users
@@ -235,6 +238,7 @@ The API should have clear contracts and validation.
 
 ### FR-13 — Background processing
 Reconciliation should not require the user to wait for every transaction to be processed synchronously.
+
 The system shall support asynchronous/background processing.
 For example:
 ```mermaid
@@ -362,6 +366,7 @@ The project will have a clearly defined Minimum Viable Product (MVP) focused on 
 
 #### Scope constraint
 The system will simulate payment and settlement sources rather than integrating with real banking or payment infrastructure.
+
 All payment, settlement, and transaction data used by the system will be synthetic. The system will not process real financial transactions or require access to real banking or payment accounts.
 
 ### 7. Success Criteria

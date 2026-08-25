@@ -18,11 +18,12 @@ Project documentation is organized according to the software development lifecyc
 
 - [01 — Discovery](docs/01-discovery/)
 - [02 — Requirements](docs/02-requirements/)
-- [03 — Design](docs/03-design/)
-- [04 — Development](docs/04-development/)
-- [05 — Testing](docs/05-testing/)
-- [06 — Deployment](docs/06-deployment/)
-- [07 — Operations](docs/07-operations/)
+- [03 - Analysis](docs/03-analysis/)
+- [04 — Design](docs/04-design/)
+- [05 — Development](docs/05-development/)
+- [06 — Testing](docs/06-testing/)
+- [07 — Deployment](docs/07-deployment/)
+- [08 — Operations](docs/08-operations/)
 
 ## Technology
 

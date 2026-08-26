@@ -411,7 +411,6 @@ An authorized user reviews reconciliation operations.
 
 ### Workflow
 ```mermaid
-Workflow
 flowchart TD
     A[Open Operational View] --> B[Load Reconciliation Metrics]
     B --> C[Load Processing Status]
@@ -478,7 +477,6 @@ Reopening resolved exceptions is not required for the initial MVP unless later a
 The core system workflow combines ingestion, reconciliation, exception handling, and resolution:
 
 ```mermaid
-The core system workflow combines ingestion, reconciliation, exception handling, and resolution:
 flowchart TD
     A[Transaction Source] --> B[Import Data]
     B --> C[Validate and Normalize]

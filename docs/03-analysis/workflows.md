@@ -279,7 +279,6 @@ An authorized Operations Analyst determines that the exception can be resolved.
 
 ## Workflow
 ```mermaid
-Workflow
 flowchart TD
     A[Select Resolve Exception] --> B[Enter Resolution Information]
     B --> C{Required Information Present?}

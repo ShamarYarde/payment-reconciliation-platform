@@ -8,9 +8,9 @@ This project is being developed using a full software development lifecycle, fro
 
 ## Project Status
 
-🚧 **In Discovery**
+🚧 **In Design**
 
-The project is currently in the discovery phase. Requirements, scope, constraints, and success criteria are being defined before implementation begins.
+Discovery, requirements, and analysis are complete. The project is currently in the design phase, where the system architecture, data model, API, security, and related technical decisions are being defined before implementation begins.
 
 ## Documentation
 

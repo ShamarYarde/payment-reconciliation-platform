@@ -10,7 +10,11 @@ This project is being developed using a full software development lifecycle, fro
 
 🚧 **In Design**
 
-Discovery, requirements, and analysis are complete. The project is currently in the design phase, where the system architecture, data model, API, security, and related technical decisions are being defined before implementation begins.
+## Project Status
+
+🚧 **In Development**
+
+Discovery, requirements, analysis, and core design are complete. The project is now in the development phase, beginning with backend scaffolding, PostgreSQL setup, and implementation of the first end-to-end reconciliation workflow.
 
 ## Documentation
 

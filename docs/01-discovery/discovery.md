@@ -82,7 +82,7 @@ The first version should include:
 flowchart LR
 A[Payment System] --> B[Transaction API]
 B --> C[Normalization]
-C --> D[PostgreSQL]
+C --> D[(PostgreSQL)]
 D --> E[Reconciliation Worker]
 E --> F[Matched]
 E --> G[Exception]
@@ -245,7 +245,7 @@ For example:
 flowchart LR
 A[POST /transaction] --> B[Queue/Event]
 B --> C[Reconciliation Worker]
-    C --> D[PostgreSQL]
+    C --> D[(PostgreSQL)]
 ```
 This is particularly valuable for demonstrating backend/distributed-systems skills.
 

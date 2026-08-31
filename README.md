@@ -31,7 +31,16 @@ Project documentation is organized according to the software development lifecyc
 
 ## Technology
 
-The technology stack will be selected during the design phase based on the project requirements and constraints.
+The current implementation uses:
+* TypeScript
+* Fastify
+* PostgreSQL
+* Drizzle ORM
+* Drizzle Kit
+* Node.js
+* Vitest for automated testing
+
+Additional frontend, authentication, deployment, and observability technologies will be added as those parts of the system are implemented.
 
 ## License
 

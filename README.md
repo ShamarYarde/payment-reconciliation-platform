@@ -8,10 +8,6 @@ This project is being developed using a full software development lifecycle, fro
 
 ## Project Status
 
-🚧 **In Design**
-
-## Project Status
-
 🚧 **In Development**
 
 Discovery, requirements, analysis, and core design are complete. The project is now in the development phase, beginning with backend scaffolding, PostgreSQL setup, and implementation of the first end-to-end reconciliation workflow.
@@ -44,4 +40,4 @@ Additional frontend, authentication, deployment, and observability technologies 
 
 ## License
 
-TBD
+This project is licensed under the MIT License. See the ```LICENSE``` file for details.

@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import { transactionRoutes } from "./api/routes/transactions.js";
 
 export function buildApp() {
   const app = Fastify({
@@ -10,6 +11,8 @@ export function buildApp() {
       status: "ok",
     };
   });
+
+  app.register(transactionRoutes)
 
   return app;
 }

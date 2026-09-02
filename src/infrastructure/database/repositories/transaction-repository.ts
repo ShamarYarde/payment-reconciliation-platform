@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 
 import { db } from "../client.js";
 import { transactions } from "../schema.js";
@@ -41,4 +41,25 @@ export async function findTransactionByExternalId(
     .limit(1);
 
   return transaction ?? null;
+}
+
+export async function findCounterpartCandidate(transaction: typeof transactions.$inferSelect) {
+  if (!transaction.reference) {
+    return null
+  }
+
+  const [candidate] = await db
+    .select()
+    .from(transactions)
+    .where(
+      and(
+        eq(transactions.reference, transaction.reference),
+        eq(transactions.currency, transaction.currency),
+        eq(transactions.amountMinor, transaction.amountMinor),
+        ne(transactions.id, transaction.id)
+      )
+    )
+    .limit(1)
+
+  return candidate ?? null;
 }

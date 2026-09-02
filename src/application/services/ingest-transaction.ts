@@ -110,8 +110,7 @@ export async function ingestTransaction(input: IngestTransactionInput) {
 
     await tx.insert(reconciliationJobTransactions).values({
       reconciliationJobId: job.id,
-      //transactionId: transaction.id,
-      transactionId: "00000000-0000-0000-0000-000000000000"
+      transactionId: transaction.id,
     });
 
     return {

@@ -4,7 +4,7 @@ import { pool } from "../infrastructure/database/client.js";
 async function main() {
   const transaction = await ingestTransaction({
     sourceId: "89ab2b8b-3b54-486a-a304-e8ad86ce944d",
-    externalTransactionId: "PAY-SERVICE-1001",
+    externalTransactionId: "PAY-ROLLBACK-JOB-1001",
     reference: "ORDER-SERVICE-1001",
     amountMinor: 12500,
     currency: "USD",

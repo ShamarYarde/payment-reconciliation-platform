@@ -22,6 +22,27 @@
       "when": 1788219817584,
       "tag": "0002_slow_ben_grimm",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788302556864,
+      "tag": "0003_chilly_bedlam",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1788302951626,
+      "tag": "0004_late_serpent_society",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1788313140851,
+      "tag": "0005_curvy_galactus",
+      "breakpoints": true
     }
   ]
 }

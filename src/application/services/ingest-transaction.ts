@@ -2,6 +2,8 @@ import { and, eq } from "drizzle-orm";
 import { db } from "../../infrastructure/database/client.js";
 import {
   importBatches,
+  reconciliationJobs,
+  reconciliationJobTransactions,
   transactions,
   transactionSources,
 } from "../../infrastructure/database/schema.js";
@@ -48,7 +50,11 @@ export async function ingestTransaction(input: IngestTransactionInput) {
       .limit(1);
 
     if (existingTransaction) {
-      return existingTransaction;
+      return {
+        transaction: existingTransaction,
+        reconcilaitionJob: null,
+        created: false,
+      };
     }
 
     const [batch] = await tx
@@ -59,7 +65,7 @@ export async function ingestTransaction(input: IngestTransactionInput) {
         totalRecords: 1,
         validRecords: 1,
         invalidRecords: 0,
-        completedAt: new Date()
+        completedAt: new Date(),
       })
       .returning();
 
@@ -87,6 +93,31 @@ export async function ingestTransaction(input: IngestTransactionInput) {
       throw new Error("Failed to create transaction");
     }
 
-    return transaction;
+    const idempotencyKey = `transaction:${transaction.id}:initial-reconciliation`;
+
+    const [job] = await tx
+      .insert(reconciliationJobs)
+      .values({
+        status: "pending",
+        idempotencyKey,
+        attemptCount: 0,
+      })
+      .returning();
+
+    if (!job) {
+      throw new Error("Failed to create reconciliation jobs");
+    }
+
+    await tx.insert(reconciliationJobTransactions).values({
+      reconciliationJobId: job.id,
+      //transactionId: transaction.id,
+      transactionId: "00000000-0000-0000-0000-000000000000"
+    });
+
+    return {
+      transaction,
+      reconcilaitionJob: job,
+      created: true,
+    };
   });
 }

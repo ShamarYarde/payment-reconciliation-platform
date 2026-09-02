@@ -151,3 +151,66 @@ export const transactions = pgTable(
     ),
   ],
 );
+
+export const reconciliationJobStatusEnum = pgEnum("reconciliation_job_status", [
+  "pending",
+  "processing",
+  "completed",
+  "failed",
+]);
+
+export const reconciliationJobs = pgTable(
+  "reconciliation_jobs",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    status: reconciliationJobStatusEnum("status").notNull().default("pending"),
+    idempotencyKey: text("idempotency_key").notNull(),
+    attemptCount: integer("attempt_count").notNull().default(0),
+    failureCode: text("failure_code"),
+    failureMessage: text("failure_message"),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+    })
+      .defaultNow()
+      .notNull(),
+    startedAt: timestamp("started_at", {
+      withTimezone: true,
+    }),
+    completedAt: timestamp("completed_at", {
+      withTimezone: true,
+    }),
+    failedAt: timestamp("failed_at", {
+      withTimezone: true,
+    }),
+  },
+  (table) => [
+    uniqueIndex("reconciliation_jobs_idempotency_key_unique").on(
+      table.idempotencyKey,
+    ),
+    index("reconciliation_job_status_idx").on(table.status),
+    index("reconciliation_jobs_created_at_idx").on(table.createdAt),
+  ],
+);
+
+export const reconciliationJobTransactions = pgTable(
+  "reconciliation_job_transactions",
+  {
+    reconciliationJobId: uuid("reconciliation_job_id")
+      .notNull()
+      .references(() => reconciliationJobs.id),
+    transactionId: uuid("transaction_id")
+      .notNull()
+      .references(() => transactions.id),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+    })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("reconciliation_job_transactions_unique").on(
+      table.reconciliationJobId,
+      table.transactionId,
+    ),
+  ],
+);

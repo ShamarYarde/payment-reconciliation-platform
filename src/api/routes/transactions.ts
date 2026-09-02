@@ -71,12 +71,12 @@ export async function transactionRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const transaction = await ingestTransaction({
+      const result = await ingestTransaction({
         ...request.body,
         occurredAt: new Date(request.body.occurredAt),
       });
 
-      return reply.code(201).send(transaction);
+      return reply.code(result.created ? 201 : 200).send(result);
     },
   );
 }

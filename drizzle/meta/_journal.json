@@ -43,6 +43,13 @@
       "when": 1788313140851,
       "tag": "0005_curvy_galactus",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788373217213,
+      "tag": "0006_worried_namorita",
+      "breakpoints": true
     }
   ]
 }

@@ -214,3 +214,56 @@ export const reconciliationJobTransactions = pgTable(
     ),
   ],
 );
+
+export const reconciliationOutcomeEnum = pgEnum("reconciliation_outcome", [
+  "matched",
+  "pending",
+  "exception",
+]);
+
+export const reconciliationResults = pgTable(
+  "reconciliation_results",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    reconciliationJobId: uuid("reconciliation_job_id")
+      .notNull()
+      .references(() => reconciliationJobs.id),
+    outcome: reconciliationOutcomeEnum("outcome").notNull(),
+    ruleCode: text("rule_code").notNull(),
+    reason: text("reason"),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+    })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("reconciliation_results_job_id_idx").on(table.reconciliationJobId),
+    index("reconciliation_results_outcome_idx").on(table.outcome),
+    index("reconciliation_results_created_at_idx").on(table.createdAt),
+  ],
+);
+
+export const reconciliationResultTransactions = pgTable(
+  "reconciliation_result_transactions",
+  {
+    reconciliationResultId: uuid("reconciliation_result_id")
+      .notNull()
+      .references(() => reconciliationResults.id),
+    transactionId: uuid("transaction_id")
+      .notNull()
+      .references(() => transactions.id),
+    role: text("role"),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+    })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("reconciliation_result_transactions_unique").on(
+      table.reconciliationResultId,
+      table.transactionId,
+    ),
+  ],
+);

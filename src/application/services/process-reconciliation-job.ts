@@ -7,6 +7,7 @@ import {
   transactions,
 } from "../../infrastructure/database/schema.js";
 import { findCounterpartCandidate } from "../../infrastructure/database/repositories/transaction-repository.js";
+import { isExactPaymentSettlementMatch } from "../../domain/reconciliation/match-transaction.js";
 
 type Transaction = typeof transactions.$inferSelect;
 
@@ -45,6 +46,58 @@ export async function processReconciliationJob(
         transactionId: primary.id,
         role: "source",
       });
+
+      await tx
+        .update(reconciliationJobs)
+        .set({
+          status: "completed",
+          completedAt: new Date(),
+          failureCode: null,
+          failureMessage: null,
+          failedAt: null,
+        })
+        .where(eq(reconciliationJobs.id, jobId));
+
+      return result;
+    });
+  }
+
+  const matched = isExactPaymentSettlementMatch(primary, counterpart);
+
+  if (matched) {
+    // persist matched result
+    return db.transaction(async (tx) => {
+      const [result] = await tx
+        .insert(reconciliationResults)
+        .values({
+          reconciliationJobId: jobId,
+          outcome: "matched",
+          ruleCode: "EXACT_PAYMENT_SETTLEMENT_MATCH",
+          reason:
+            "Payment and settlement matched by reference, currency, amount, type, and status",
+        })
+        .returning();
+
+      if (!result) {
+        throw new Error("Failed to create reconciliation result");
+      }
+
+      await tx.insert(reconciliationResultTransactions).values([
+        {
+          reconciliationResultId: result.id,
+          transactionId: primary.id,
+          role:
+            primary.transactionType === "payment" ? "payment" : "settlement",
+        },
+        {
+          reconciliationResultId: result.id,
+          transactionId: counterpart.id,
+          role:
+            counterpart.transactionType === "payment"
+              ? "payment"
+              : "settlement",
+        },
+      ]);
 
       await tx
         .update(reconciliationJobs)

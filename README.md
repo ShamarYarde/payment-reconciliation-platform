@@ -38,6 +38,22 @@ The current implementation uses:
 
 Additional frontend, authentication, deployment, and observability technologies will be added as those parts of the system are implemented.
 
+## Getting Started
+
+### Prerequisites
+
+- Node.js
+- npm
+- PostgreSQL 17
+
+### Installation
+
+```bash
+git clone https://github.com/ShamarYarde/support-flow
+cd support-flow
+npm install
+```
+
 ## License
 
 This project is licensed under the MIT License. See the ```LICENSE``` file for details.

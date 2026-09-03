@@ -101,9 +101,9 @@ describe("processReconciliationJob - pending", () => {
       .from(reconciliationResults)
       .where(eq(reconciliationResults.reconciliationJobId, job.id));
 
-    /*if (!reconciliationResult) {
+    if (!reconciliationResult) {
       throw new Error("Failed to run reconciliation worker");
-      }*/
+    }
 
     expect(reconciliationResult?.outcome).toBe("pending");
     expect(reconciliationResult?.ruleCode).toBe("NO_COUNTERPART_FOUND");
@@ -112,7 +112,10 @@ describe("processReconciliationJob - pending", () => {
       .select()
       .from(reconciliationResultTransactions)
       .where(
-        eq(reconciliationResultTransactions.reconciliationResultId, reconciliationResult.id),
+        eq(
+          reconciliationResultTransactions.reconciliationResultId,
+          reconciliationResult.id,
+        ),
       );
 
     expect(associations).toHaveLength(1);

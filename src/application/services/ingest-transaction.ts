@@ -7,12 +7,6 @@ import {
   transactions,
   transactionSources,
 } from "../../infrastructure/database/schema.js";
-import { findTransactionSourceById } from "../../infrastructure/database/repositories/transaction-source-repository.js";
-import { createImportBatch } from "../../infrastructure/database/repositories/import-batch-repository.js";
-import {
-  createTransaction,
-  findTransactionByExternalId,
-} from "../../infrastructure/database/repositories/transaction-repository.js";
 
 export interface IngestTransactionInput {
   sourceId: string;

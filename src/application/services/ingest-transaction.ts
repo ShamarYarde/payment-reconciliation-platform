@@ -52,7 +52,7 @@ export async function ingestTransaction(input: IngestTransactionInput) {
     if (existingTransaction) {
       return {
         transaction: existingTransaction,
-        reconcilaitionJob: null,
+        reconciliationJob: null,
         created: false,
       };
     }
@@ -115,7 +115,7 @@ export async function ingestTransaction(input: IngestTransactionInput) {
 
     return {
       transaction,
-      reconcilaitionJob: job,
+      reconciliationJob: job,
       created: true,
     };
   });

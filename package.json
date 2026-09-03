@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "test": "vitest run",
+    "test": "DATABASE_URL=postgresql://localhost:5432/reconciliation_test vitest run",
     "worker:reconcile": "tsx src/workers/reconciliation-worker.ts"
   },
   "keywords": [],

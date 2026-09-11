@@ -113,6 +113,48 @@ export async function processReconciliationJob(
       return result;
     });
   }
+  
+  return db.transaction(async (tx) => {
+    const [result] = await tx
+      .insert(reconciliationResults)
+      .values({
+        reconciliationJobId: jobId,
+        outcome: "exception",
+        ruleCode: "COUNTERPART_MISMATCH",
+        reason:
+          "A counterpart transaction was found, but it did not satisfy the reconciliation rules.",
+      })
+      .returning();
 
-  throw new Error("Counterpart matching outcome is not implemented yet");
+    if (!result) {
+      throw new Error("Failed to create reconciliation result");
+    }
+
+    await tx.insert(reconciliationResultTransactions).values([
+      {
+        reconciliationResultId: result.id,
+        transactionId: primary.id,
+        role: primary.transactionType === "payment" ? "payment" : "settlement",
+      },
+      {
+        reconciliationResultId: result.id,
+        transactionId: counterpart.id,
+        role:
+          counterpart.transactionType === "payment" ? "payment" : "settlement",
+      },
+    ]);
+
+    await tx
+      .update(reconciliationJobs)
+      .set({
+        status: "completed",
+        completedAt: new Date(),
+        failureCode: null,
+        failureMessage: null,
+        failedAt: null,
+      })
+      .where(eq(reconciliationJobs.id, jobId));
+
+    return result;
+  });
 }

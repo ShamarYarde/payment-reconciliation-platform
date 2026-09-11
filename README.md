@@ -10,9 +10,15 @@ This project is being developed using a full software development lifecycle, fro
 
 🚧 **In Development**
 
-Discovery, requirements, analysis, and core design are complete. The current implementation includes PostgreSQL persistence, transaction ingestion, reconciliation job creation, background worker processing, payment and settlement matching, reconciliation result persistence, and automated tests.
+Discovery, requirements, analysis, and core design are complete. The current implementation includes PostgreSQL persistence, transaction ingestion, reconciliation job creation, background worker processing, payment and settlement matching, reconciliation result persistence, result retrieval, and automated tests.
 
-Development is continuing toward a broader operational workflow, including exception handling, result retrieval, observability, deployment, and operations.
+The reconciliation workflow now supports the three core business outcomes:
+
+- **Matched** - a compatible payment and settlement satisfy the reconciliation rules.
+- **Pending** - no compatible counterpart transaction is currently available.
+- **Exception** - a counterpart transaction is found but does not satisfy the reconciliation rules.
+
+Development is continuing toward a broader operational maturity, including observability, retry and recovery behavior, late-arriving transaction handling and reconciliation, deployment, and operations.
 
 ## Documentation
 

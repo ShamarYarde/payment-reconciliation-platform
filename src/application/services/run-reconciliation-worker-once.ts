@@ -7,6 +7,8 @@ import {
 } from "../../infrastructure/database/schema.js";
 import { processReconciliationJob } from "./process-reconciliation-job.js";
 
+const MAX_ATTEMPTS = 3;
+
 export async function claimNextReconciliationJob() {
   return db.transaction(async (tx) => {
     const result = await tx.execute(sql`
@@ -33,7 +35,9 @@ export async function claimNextReconciliationJob() {
             started_at = NOW(),
             attempt_count = attempt_count + 1
         WHERE id = ${jobId}
-        RETURNING *
+        RETURNING
+            id,
+            attempt_count as "attemptCount"
       `);
 
     return claimed.rows[0] ?? null;
@@ -61,6 +65,7 @@ export async function runReconciliationWorkerOnce() {
   }
 
   const jobId = job.id as string;
+  const attemptCount = Number(job.attemptCount);
 
   try {
     const jobTransactions = await findTransactionsForJob(jobId);
@@ -69,17 +74,33 @@ export async function runReconciliationWorkerOnce() {
 
     return result;
   } catch (error) {
-    await markReconciliationJobFailed(jobId, error)
+    await handleReconciliationJobFailure(jobId, attemptCount, error);
     throw error;
   }
 }
 
-export async function markReconciliationJobFailed(
+export async function handleReconciliationJobFailure(
   jobId: string,
+  attemptCount: number,
   error: unknown,
 ) {
   const message =
     error instanceof Error ? error.message : "Unknown reconciliation failure";
+
+  if (attemptCount < MAX_ATTEMPTS) {
+    await db
+      .update(reconciliationJobs)
+      .set({
+        status: "pending",
+        failureCode: null,
+        failureMessage: null,
+        failedAt: null,
+        startedAt: null,
+      })
+      .where(eq(reconciliationJobs.id, jobId));
+
+    return;
+  }
 
   await db
     .update(reconciliationJobs)

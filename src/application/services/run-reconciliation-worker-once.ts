@@ -37,7 +37,7 @@ export async function claimNextReconciliationJob() {
         WHERE id = ${jobId}
         RETURNING
             id,
-            attempt_count as "attemptCount"
+            attempt_count AS "attemptCount"
       `);
 
     return claimed.rows[0] ?? null;

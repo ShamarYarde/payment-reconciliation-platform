@@ -10,7 +10,7 @@ This project is being developed using a full software development lifecycle, fro
 
 🚧 **In Development**
 
-Discovery, requirements, analysis, and core design are complete. The current implementation includes PostgreSQL persistence, transaction ingestion, reconciliation job creation, background worker processing, payment and settlement matching, reconciliation result persistence and retrieval, reconciliation job retry/recovery behavior, late-arriving transaction re-reconciliation, and automated tests.
+Discovery, requirements, analysis, and core design are complete. The current implementation includes PostgreSQL persistence, transaction ingestion, reconciliation job creation, background worker processing, payment and settlement matching, reconciliation result persistence and retrieval, reconciliation job retry/recovery behavior, late-arriving transaction re-reconciliation, structured logging, and automated tests.
 
 The reconciliation workflow now supports the three core business outcomes:
 
@@ -18,9 +18,19 @@ The reconciliation workflow now supports the three core business outcomes:
 - **Pending** - no compatible counterpart transaction is currently available.
 - **Exception** - a counterpart transaction is found but does not satisfy the reconciliation rules.
 
-Operational behavior now includes bounded retry handling for failed reconciliation jobs and re-reconciliation when a previously pending transaction receives a late-arriving counterpart, while preserving the original reconciliation result as history.
+Operational behavior includes bounded retry handling for failed reconciliation jobs and re-reconciliation when a previously pending transaction receives a late-arriving counterpart, while preserving the original reconciliation result as history.
 
-Development is continuing observability, deployment, and operations.
+Structured observability covers key reconciliation lifecycle events, including:
+
+- worker idle state when no pending jobs are available
+- reconciliation job claim and processing
+- successful completion, including outcome and processing duration
+- failed jobs that are requeued for another attempt
+- jobs that permanently fail after exhausting retry attempts
+- creation of re-conciliation jobs for late-arriving transactions
+- worker-level failures
+
+Development is continuing deployment, and operations.
 
 ## Documentation
 
@@ -46,8 +56,9 @@ The current implementation uses:
 * Drizzle ORM
 * Drizzle Kit
 * Vitest
+* Pino
 
-Additional frontend, authentication, deployment, and observability technologies will be added as those parts of the system are implemented.
+Additional deployment and operational tooling may be added as those parts of the system are implemented.
 
 ## Getting Started
 

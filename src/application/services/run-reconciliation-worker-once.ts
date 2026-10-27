@@ -6,6 +6,8 @@ import {
   transactions,
 } from "../../infrastructure/database/schema.js";
 import { processReconciliationJob } from "./process-reconciliation-job.js";
+import { logger } from "../../infrastructure/logging/logger.js";
+import { duration } from "drizzle-orm/gel-core";
 
 const MAX_ATTEMPTS = 3;
 
@@ -66,15 +68,37 @@ export async function runReconciliationWorkerOnce() {
 
   const jobId = job.id as string;
   const attemptCount = Number(job.attemptCount);
+  const startedAt = Date.now();
+
+  logger.info(
+    {
+      event: "reconciliation_job_claimed",
+      jobId,
+      attemptCount,
+    },
+    "Reconciliation job claimed",
+  );
 
   try {
     const jobTransactions = await findTransactionsForJob(jobId);
 
     const result = await processReconciliationJob(jobId, jobTransactions);
 
+    logger.info(
+      {
+        event: "reconciliation_job_completed",
+        jobId,
+        attemptCount,
+        outcome: result.outcome,
+        durationMs: Date.now() - startedAt,
+      },
+      "Reconciliation job completed",
+    );
+
     return result;
   } catch (error) {
-    await handleReconciliationJobFailure(jobId, attemptCount, error);
+    const durationMs = Date.now() - startedAt
+    await handleReconciliationJobFailure(jobId, attemptCount, error, durationMs);
     throw error;
   }
 }
@@ -83,6 +107,7 @@ export async function handleReconciliationJobFailure(
   jobId: string,
   attemptCount: number,
   error: unknown,
+  durationMs: number
 ) {
   const message =
     error instanceof Error ? error.message : "Unknown reconciliation failure";
@@ -99,6 +124,18 @@ export async function handleReconciliationJobFailure(
       })
       .where(eq(reconciliationJobs.id, jobId));
 
+    logger.warn(
+      {
+        event: "reconciliation_job_requeued",
+        jobId,
+        attemptCount,
+        maxAttempts: MAX_ATTEMPTS,
+        error: message,
+        durationMs
+      },
+      "Reconciliation job failed and was requeued",
+    );
+
     return;
   }
 
@@ -111,4 +148,15 @@ export async function handleReconciliationJobFailure(
       failedAt: new Date(),
     })
     .where(eq(reconciliationJobs.id, jobId));
+
+  logger.error(
+    {
+      event: "reconciliation_job_failed",
+      jobId,
+      attemptCount,
+      failureCode: "PROCESSING_ERROR",
+      error: message,
+    },
+    "Reconciliation job permanently failed",
+  );
 }

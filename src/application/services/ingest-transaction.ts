@@ -9,6 +9,7 @@ import {
   transactions,
   transactionSources,
 } from "../../infrastructure/database/schema.js";
+import { logger } from "../../infrastructure/logging/logger.js";
 
 export interface IngestTransactionInput {
   sourceId: string;
@@ -143,7 +144,7 @@ export async function ingestTransaction(input: IngestTransactionInput) {
         transaction: existingTransaction,
         reconciliationJob: null,
         created: false,
-        reReconciliation: false
+        reReconciliation: false,
       };
     }
 
@@ -190,6 +191,17 @@ export async function ingestTransaction(input: IngestTransactionInput) {
         counterpart.id,
         transaction.id,
       ]);
+
+      logger.info(
+        {
+          event: "late_arrival_reconciliation_created",
+          jobId: job.id,
+          transactionIds: [counterpart.id, transaction.id],
+          counterPartType: counterpart.transactionType,
+          arrivingTransactionType: transaction.transactionType,
+        },
+        "Late-arriving transaction triggered re-reconciliation",
+      );
 
       return {
         transaction,

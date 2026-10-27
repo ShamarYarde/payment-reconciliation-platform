@@ -82,7 +82,10 @@ Create a `.env` file:
 
 ```env
 DATABASE_URL=postgresql://localhost:5432/reconciliation_dev
+LOG_LEVEL=info
 ```
+
+`LOG_LEVEL` controls the minimum structured logging level. If omitted, it defaults to `info`. Accepted values are `trace`, `debug`, `info`, `warn`, `error`, `fatal`, and `silent`.
 
 ### Create the Development Database
 

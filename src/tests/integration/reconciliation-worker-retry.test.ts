@@ -7,7 +7,6 @@ vi.mock("../../application/services/process-reconciliation-job.ts", () => ({
 
 import { processReconciliationJob } from "../../application/services/process-reconciliation-job.js";
 import {
-  claimNextReconciliationJob,
   runReconciliationWorkerOnce,
 } from "../../application/services/run-reconciliation-worker-once.js";
 import { db, pool } from "../../infrastructure/database/client.js";

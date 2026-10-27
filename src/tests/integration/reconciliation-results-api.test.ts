@@ -1,6 +1,4 @@
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
-import { eq } from "drizzle-orm";
-
 import { buildApp } from "../../app.js";
 import { db, pool } from "../../infrastructure/database/client.js";
 import {

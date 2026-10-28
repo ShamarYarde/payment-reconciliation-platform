@@ -10,7 +10,7 @@ This project is being developed using a full software development lifecycle, fro
 
 🚧 **In Development**
 
-Discovery, requirements, analysis, and core design are complete. The current implementation includes PostgreSQL persistence, transaction ingestion, reconciliation job creation, background worker processing, payment and settlement matching, reconciliation result persistence and retrieval, reconciliation job retry/recovery behavior, late-arriving transaction re-reconciliation, structured logging, and automated tests.
+Discovery, requirements, analysis, and core design are complete. The current implementation includes PostgreSQL persistence, transaction ingestion, reconciliation job creation, background worker processing, payment and settlement matching, reconciliation result persistence and retrieval, reconciliation job retry and recovery behavior, late-arriving transaction re-reconciliation, structured logging, and automated tests.
 
 The reconciliation workflow now supports the three core business outcomes:
 

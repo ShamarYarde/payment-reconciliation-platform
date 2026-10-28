@@ -31,7 +31,7 @@ describe("POST /api/v1/transactions", () => {
     await pool.end();
   });
 
-  it("creates a tranasaction and reconciliation job", async () => {
+  it("creates a transaction and reconciliation job", async () => {
     const [source] = await db
       .insert(transactionSources)
       .values({

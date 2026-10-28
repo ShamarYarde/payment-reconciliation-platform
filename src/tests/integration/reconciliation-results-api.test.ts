@@ -33,7 +33,7 @@ describe("GET /api/v1/reconciliation-results", () => {
     const [source] = await db
       .insert(transactionSources)
       .values({
-        name: "Rsult API Test Payment Source",
+        name: "Result API Test Payment Source",
         sourceType: "payment",
         status: "active",
       })

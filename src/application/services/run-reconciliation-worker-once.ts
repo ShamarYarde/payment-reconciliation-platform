@@ -7,7 +7,6 @@ import {
 } from "../../infrastructure/database/schema.js";
 import { processReconciliationJob } from "./process-reconciliation-job.js";
 import { logger } from "../../infrastructure/logging/logger.js";
-import { duration } from "drizzle-orm/gel-core";
 
 const MAX_ATTEMPTS = 3;
 
